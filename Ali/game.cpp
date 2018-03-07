@@ -88,8 +88,6 @@ main(){
 	InitPuzz();
 	SaveImgMemory("Assets\\Puzzle.bmp","Assets\\Thumbs.bmp",450/3);
 
-    //PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
-	mciSendString("play Assets\\intro.wav",NULL,0,NULL);
 	readimagefile("Assets\\bg_game.bmp",0,0,800,600);
 	DrawPuzz(450/3);
 	rectangle(75,75,225,225);
@@ -187,10 +185,6 @@ void controller(){
 				valid = 1;
 				readimagefile("Assets\\h_up.bmp",655,355,695,395);
 				PlaySound(TEXT("Assets\\move.wav"), NULL, SND_SYNC);
-				int temp;
-				temp = puzz_rand[1][2];
-				puzz_rand[1][2] = puzz_rand[2][2];
-				puzz_rand[2][2] = temp;
 				//clearviewport();
 				DrawPuzz(450/3);
 			}
