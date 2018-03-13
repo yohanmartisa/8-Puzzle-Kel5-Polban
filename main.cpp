@@ -13,7 +13,6 @@ int main(){
 	int action=0;
 	initwindow(800,600,"Game");
 	PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
-	getch();
 	while(action != 4){
 		Main_Menu(&action);
 		switch(action){
