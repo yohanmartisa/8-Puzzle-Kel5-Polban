@@ -6,7 +6,12 @@
 #include <conio.h>
 #include <MMSystem.h>
 #include "Ali_171511035.h"
-void About_Menu(int *action);
-void controller_about(struct button Back, struct button sound, struct button Yohan, struct button Ali, 
-					  struct button Firna, struct button Cahya, struct button Aldo, int *action);
+#include "Firna_171511040.h"
+
+void About_Menu(int *action, boolean *ceksound);
+//Menampilkan Menu About
+
+void controller_about(int *action, boolean *ceksound);
+//Kontroller mouse untuk Menu About
+
 #endif

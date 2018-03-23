@@ -6,9 +6,21 @@
 #include <conio.h>
 #include <MMSystem.h>
 #include "Ali_171511035.h"
+#include "Firna_171511040.h"
 
-void HighScore_Menu(int *action);
-void Draw_Button_HighScore(int *action);
-void controller_Skor(struct button Button1, struct button Button2,struct button sound,int *action);
+typedef struct Pengguna{
+	char nama[11];
+	int skor;
+	char *level;
+};
+
+extern Pengguna player,temp;
+
+void HighScore_Menu(int *action, boolean *ceksound);
+void Draw_Button_HighScore(int *action, boolean *ceksound);
+void controller_Skor(int *action, boolean *ceksound);
+void Write_Score(int level);
+void Show_Score();
+void Sort_Score();
 
 #endif

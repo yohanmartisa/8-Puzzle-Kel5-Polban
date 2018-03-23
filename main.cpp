@@ -8,49 +8,65 @@
 #include "Include\\Ilham_171511042.h"
 #include "Include\\RaeyFaldo_171511058.h"
 #include "Include\\Yohan_171511033.h"
+#include "Include\\config.h"
+
 
 int main(){
-	int action=0;
+	int action=NO_ACT;
+	char nama[11];
+	boolean ceksound = true;
+	
 	initwindow(800,600,"Game");
-	PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
-	while(action != 4){
-		Main_Menu(&action);
+	awal();
+	
+	mciSendString("open Assets\\intro.wav type waveaudio alias myMidi",NULL,0,NULL);
+	mciSendString("play myMidi notify",NULL,0,NULL);
+			
+	while(action != B_EXIT){
+		Main_Menu(&action, &ceksound);
 		switch(action){
-			case 1 : {
+			case B_LEVEL : {
 				cleardevice();
-				Menu_Difficult(&action);
+				Menu_Difficult(&action, &ceksound, nama);
 				break;
 			}
-			case 2:{
+			case B_SCORE:{
 				cleardevice();
-				HighScore_Menu(&action);
+				HighScore_Menu(&action, &ceksound);
 				break;
 			}
-			case 3:{
+			case B_ABOUT:{
 				cleardevice();
-				About_Menu(&action);
+				About_Menu(&action, &ceksound);
 				break;
 			}
 			default : break;
 		}
 		
-		//Level Menu
-		switch(action){
-			case 11 :{
-				cleardevice();
-				game_menu(&action);
-				break;}
-			case 12:{
-				cleardevice();
-				game_menu(&action);
-				break;}
-			case 13:{
-				cleardevice();
-				game_menu(&action);
-				break;}
-			default : break;
+		//Game Menu
+		while (action == B_EASY || action == B_MEDIUM || action == B_HARD || action == 21){
+			switch(action){
+				case B_EASY :{
+					cleardevice();
+					game_menu(&action, &ceksound, nama,3);
+					break;}
+				case B_MEDIUM:{
+					cleardevice();
+					game_menu(&action, &ceksound, nama,4);
+					break;}
+				case B_HARD:{
+					cleardevice();
+					game_menu(&action, &ceksound, nama,5);
+					break;}
+				case ACT_END :{
+					cleardevice();
+					HighScore_Menu(&action, &ceksound);
+					break;
+				}
+				default : break;
+			}
 		}
 				
 	}
-	
+	//mciSendString("play ""Assets\\intro.wav""",NULL,0,NULL);
 }

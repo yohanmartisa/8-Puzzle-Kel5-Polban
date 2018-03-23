@@ -7,6 +7,10 @@
 #include <MMSystem.h>
 #include "Ali_171511035.h"
 
-void controller_menu_utama(struct button Button1,struct button Button2,struct button Button3,struct button Button4,struct button sound,int *action);
-void Main_Menu(int *action);
+void controller_menu_utama(int *action, boolean *ceksound);
+void Main_Menu(int *action, boolean *ceksound);
+void random (int puzzle_size);
+void victory(int *valid, int *win,int puzzle_size);
+void cheats (int puzzle_size);
+void soundcek(boolean *ceksound);
 #endif

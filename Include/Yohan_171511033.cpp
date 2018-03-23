@@ -1,9 +1,8 @@
 #include "Yohan_171511033.h"
-void About_Menu(int *action){
+
+button Back,Ali,Firna,Cahya,Yohan,Aldo;
 	
-	readimagefile("Assets/bg_about.bmp",0,0,800,600);
-	
-	button Back,Ali,Firna,Cahya,Yohan,Aldo,sound;
+void About_Menu(int *action, boolean *ceksound){
 	
 	Back.x = 10; 		Back.y = 540;
 	Back.width = 150; 	Back.height = 50;
@@ -16,27 +15,29 @@ void About_Menu(int *action){
 	sound.hover_image="Assets/h_sound.bmp";
 	
 	Yohan.x=75;		Yohan.y=150;
-	Yohan.image="Assets/Foto.bmp";
-	Yohan.hover_image="Assets/h_Foto.bmp";
+	Yohan.image="Assets/171511033.jpg";
+	Yohan.hover_image="Assets/171511033.jpg";
 	
 	Ali.x=325;		Ali.y=150;
-	Ali.image="Assets/Foto.bmp";
-	Ali.hover_image="Assets/h_Foto.bmp";
+	Ali.image="Assets/171511035.jpg";
+	Ali.hover_image="Assets/171511035.jpg";
 	
 	Firna.x=575;		Firna.y=150;
-	Firna.image="Assets/Foto.bmp";
-	Firna.hover_image="Assets/h_Foto.bmp";
+	Firna.image="Assets/171511040.jpg";
+	Firna.hover_image="Assets/171511040.jpg";
 	
 	Cahya.x=200;		Cahya.y=375;
-	Cahya.image="Assets/Foto.bmp";
-	Cahya.hover_image="Assets/h_Foto.bmp";
+	Cahya.image="Assets/171511042.jpg";
+	Cahya.hover_image="Assets/171511042.jpg";
 	
 	Aldo.x=450;		Aldo.y=375;
-	Aldo.image="Assets/Foto.bmp";
-	Aldo.hover_image="Assets/h_Foto.bmp";
+	Aldo.image="Assets/171511058.jpg";
+	Aldo.hover_image="Assets/171511058.jpg";
 	
 	Yohan.width = Yohan.height = Ali.width = Ali.height = Firna.width = Firna.height = 
 	Cahya.width = Cahya.height = Aldo.width = Aldo.height = 150 ;
+	
+	readimagefile("Assets/bg_about.bmp",0,0,800,600);
 	
 	make_button_img(Yohan,NOT_HOVER);
 	make_button_img(Ali,NOT_HOVER);
@@ -44,23 +45,26 @@ void About_Menu(int *action){
 	make_button_img(Cahya,NOT_HOVER);
 	make_button_img(Aldo,NOT_HOVER);
 	make_button_img(Back,NOT_HOVER);
-	make_button_img(sound,NOT_HOVER);
-	controller_about(Back,sound,Yohan,Ali,Firna,Cahya,Aldo,action);
+	
+	soundcek(ceksound);
+	controller_about(action, ceksound);
 }
 
-void controller_about(struct button Back, struct button sound, struct button Yohan, struct button Ali, 
-					  struct button Firna, struct button Cahya, struct button Aldo, int *action){
+void controller_about(int *action, boolean *ceksound){
+	
+	//Var Lokal
 	int valid=0;
 	int x=-1,y=-1;
-	const char *temp_sound;
 	int psound=0;
+	
+	//Looping Controller Mouse
 	while(valid==0){
 		getmouseclick(WM_LBUTTONDOWN,x,y);
 		delay(100);
 		if(x>=Back.x && x<=Back.x+Back.width && y>=Back.y && y<=Back.y+Back.height){
 			make_button_img(Back,HOVER);
 			valid = 1;
-			*action = 0;
+			*action = NO_ACT;
 		}
 		else if(x>=Yohan.x && x<=Yohan.x+Yohan.width && y>=Yohan.y && y<=Yohan.y+Yohan.height){
 			make_button_img(Yohan,HOVER);
@@ -79,17 +83,17 @@ void controller_about(struct button Back, struct button sound, struct button Yoh
 		}
 		else if(x>=sound.x && x<=sound.x+sound.width && y>=sound.y && y<=sound.y+sound.height){
 				psound=psound+1;
-				if(psound%2==1){
+				if((psound%2==1) && (*ceksound == true)){
 					mciSendString("pause myMidi",0,0,0);
-					temp_sound = sound.image;
-					sound.image = sound.hover_image;
+					make_button_img(sound,HOVER);
+					*ceksound = false;
 				}
 				else {
-					sound.image = temp_sound;
+					make_button_img(sound,NOT_HOVER);
 					mciSendString("resume myMidi",0,0,0);	
+					*ceksound = true;
 				}
-				valid = 1;
-				}
+			}
 	}
 	delay(500);
 	clearmouseclick(WM_LBUTTONDOWN);

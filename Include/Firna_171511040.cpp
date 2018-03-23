@@ -1,7 +1,7 @@
 #include "Firna_171511040.h"
+button Play,Score,About;
 
-void Main_Menu(int *action){
-	button Play,Score,About,Exit,sound;
+void Main_Menu(int *action, boolean *ceksound){
 	
 	// Button Play
 	Play.x = 325; 		//Koordinat x
@@ -47,48 +47,107 @@ void Main_Menu(int *action){
 	make_button_img(About,NOT_HOVER);
 	make_button_img(Exit,NOT_HOVER);
 	make_button_img(sound,NOT_HOVER);
-	controller_menu_utama(Play, Score, About, Exit, sound, action);
+	
+	//pengecekan tombol sound
+	soundcek(ceksound);
+	controller_menu_utama(action, ceksound);
 }
 
-void controller_menu_utama(struct button Button1,struct button Button2,struct button Button3,struct button Button4,struct button sound,int *action){
+void controller_menu_utama(int *action, boolean *ceksound){
 	int valid=0;
 	int x=-1,y=-1;
-	const char *temp_sound;
 	int psound=0;
 	
 	while(valid==0){
 		getmouseclick(WM_LBUTTONDOWN,x,y);
 		delay(200);
-		if(x>=Button1.x && x<=Button1.x+Button1.width && y>=Button1.y && y<=Button1.y+Button1.height){
+		if(x>=Play.x && x<=Play.x+Play.width && y>=Play.y && y<=Play.y+Play.height){
 			valid = 1;
-			*action = 1;
-			make_button_img(Button1,HOVER);
-		} else if ((x>=Button2.x && x<=Button2.x+Button2.width && y>=Button2.y && y<=Button2.y+Button2.height)){
+			*action = B_LEVEL;
+			make_button_img(Play,HOVER);
+		} else if ((x>=Score.x && x<=Score.x+Score.width && y>=Score.y && y<=Score.y+Score.height)){
 			valid = 1;
-			*action = 2;
-			make_button_img(Button2,HOVER);
-		} else if ((x>=Button3.x && x<=Button3.x+Button3.width && y>=Button3.y && y<=Button3.y+Button3.height)){
+			*action = B_SCORE;
+			make_button_img(Score,HOVER);
+		} else if ((x>=About.x && x<=About.x+About.width && y>=About.y && y<=About.y+About.height)){
 			valid = 1;
-			*action = 3;
-			make_button_img(Button3,HOVER);
-		} else if ((x>=Button4.x && x<=Button4.x+Button4.width && y>=Button4.y && y<=Button4.y+Button4.height)){
+			*action = B_ABOUT;
+			make_button_img(About,HOVER);
+		} else if ((x>=Exit.x && x<=Exit.x+Exit.width && y>=Exit.y && y<=Exit.y+Exit.height)){
 			valid = 1;
-			*action = 4;
-			make_button_img(Button4,HOVER);
+			*action = B_EXIT;
+			make_button_img(Exit,HOVER);
 		}
 		else if(x>=sound.x && x<=sound.x+sound.width && y>=sound.y && y<=sound.y+sound.height){
-				psound=psound+1;
-				if(psound%2==1){
-					mciSendString("pause myMidi",0,0,0);
-					temp_sound = sound.image;
-					sound.image = sound.hover_image;
-				}
-				else {
-					sound.image = temp_sound;
-					mciSendString("resume myMidi",0,0,0);	
-				}
-				valid = 1;
-				}
+			psound=psound+1;
+			if((psound%2==1) && (*ceksound == true)){
+				mciSendString("pause myMidi",0,0,0);
+				make_button_img(sound,HOVER);
+				*ceksound = false;
 			}
-	delay(200);
+			else {
+				make_button_img(sound,NOT_HOVER);
+				mciSendString("resume myMidi",0,0,0);
+				*ceksound = true;	
+			}
+		}
 	}
+	delay(200);
+}
+	
+void random (int puzzle_size){
+	int i,j;
+	int t;
+	srand(time(NULL));
+	for (i = 0; i < puzzle_size; i++) {
+		int rand_i = i + rand() / (RAND_MAX / (puzzle_size - i) + 1);
+		for (j=0; j<puzzle_size; j++){
+        	int rand_j = j + rand() / (RAND_MAX / (puzzle_size - j) + 1);
+        	t = puzz_rand[rand_i][rand_j];
+			puzz_rand[rand_i][rand_j] = puzz_rand[i][j];
+			puzz_rand[i][j] = t;
+			if (puzz_rand[i][j] == puzzle_size*puzzle_size){
+				x_puzz=i;
+				y_puzz=j;
+			}
+        }
+    }
+}
+
+void victory(int *valid, int *win,int puzzle_size){
+	int i, j, k;
+	k = 0;
+	for(i=0;i<puzzle_size;i++){
+		for(j=0;j<puzzle_size;j++){
+			if(puzz_rand[i][j]==puzz_final[i][j]){
+				k++;
+			}
+		}
+	}
+	if (k == puzzle_size*puzzle_size){
+		*valid = 1;
+		*win = 1;
+	}
+}
+
+void cheats(int puzzle_size){
+	int i,j;
+	for(i=0;i<5;i++){
+		for(j=0;j<5;j++){
+			puzz_rand[i][j] = puzz_final[i][j];
+		}
+	}
+	puzz_rand[puzzle_size-1][puzzle_size-1] = puzzle_size*puzzle_size-puzzle_size;
+	puzz_rand[puzzle_size-2][puzzle_size-1] = puzzle_size*puzzle_size-(puzzle_size*2);
+	puzz_rand[puzzle_size-3][puzzle_size-1] = puzzle_size*puzzle_size;
+	x_puzz=puzzle_size-3;
+	y_puzz=puzzle_size-1;
+}
+
+void soundcek(boolean *ceksound){
+	if (*ceksound == false){
+		make_button_img(sound,HOVER);
+	} else {
+		make_button_img(sound,NOT_HOVER);
+	}
+}
