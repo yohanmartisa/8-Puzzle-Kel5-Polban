@@ -7,32 +7,32 @@ void About_Menu(int *Action, boolean *Cek_Sound){
 	Back.X = 10; 		Back.Y = 540;                           //memasukan lokasi gambar
 	Back.Width = 150; 	Back.Height = 50;					    //mengatur tinggi dan lebar gambar
 	Back.Image = "Assets/back.bmp";								//memasukan gambar tombol back 1
-	Back.PRESS_Image = "Assets/h_back.bmp";					    //memasukan gambar tombol back 2
+	Back.PRESS_Image = "Assets/h_back.bmp";					    //gambar tombol back tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar tombol sound
 	Sound.X=740;		Sound.Y=540;                           //memasukan lokasi gambar
 	Sound.Width=50;		Sound.Height=50;					   //mengatur tinggi dan lebar gambar
 	Sound.Image="Assets/sound.bmp";							   //memasukan gambar tombol sound 1
-	Sound.PRESS_Image="Assets/h_sound.bmp";					   //memasukan gambar tombol sound 2
+	Sound.PRESS_Image="Assets/h_sound.bmp";					   //gambar tombol sound tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar anggota yohan
-	Yohan.X=75;		Yohan.Y=150;							   //memasukan lokasi gambar
+	Yohan.X=75;		Yohan.Y=150;				  		   //memasukan lokasi gambar
 	Yohan.Image="Assets/171511033.jpg";						   //memasukan foto yohan 
-	Yohan.PRESS_Image="Assets/171511033.jpg";
+	Yohan.PRESS_Image="Assets/171511033.jpg";					   //foto "yohan" saat tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar anggota ali
 	Ali.X=325;		Ali.Y=150;								  //memasukan lokasi gambar
 	Ali.Image="Assets/171511035.jpg";						  //memasukan foto ali 	
-	Ali.PRESS_Image="Assets/171511035.jpg";
+	Ali.PRESS_Image="Assets/171511035.jpg";						  //foto "ali" saat tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar anggota firna
 	Firna.X=575;		Firna.Y=150;						  //memasukan lokasi gambar
 	Firna.Image="Assets/171511040.jpg";						  //memasukan foto firna
-	Firna.PRESS_Image="Assets/171511040.jpg";
+	Firna.PRESS_Image="Assets/171511040.jpg";					  //foto firna saat tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar anggota cahya
 	Cahya.X=200;		Cahya.Y=375;						  //memasukan lokasi gambar
 	Cahya.Image="Assets/171511042.jpg";						   //memasukan foto cahya
-	Cahya.PRESS_Image="Assets/171511042.jpg";
+	Cahya.PRESS_Image="Assets/171511042.jpg";					   //foto cahya saat tertekan
 	//mengatur ukuran ,lokasi ,dan memasukan gambar anggota aldo
 	Aldo.X=450;		Aldo.Y=375;								  //memasukan lokasi gambar
 	Aldo.Image="Assets/171511058.jpg";						  //memasukan foto aldo
-	Aldo.PRESS_Image="Assets/171511058.jpg";
+	Aldo.PRESS_Image="Assets/171511058.jpg";					  //foto aldo saat tertekan
 	
 	Yohan.Width = Yohan.Height = Ali.Width = Ali.Height = Firna.Width = Firna.Height = 
 	Cahya.Width = Cahya.Height = Aldo.Width = Aldo.Height = 150 ;						//mengatur tinggi dan lebar gambar anggota kelompok
@@ -88,11 +88,11 @@ void Controller_About(int *Action, boolean *Cek_Sound){
 		//aksi yang dilakukan ketika mengklik area Sound	
 		else if(X>=Sound.X && X<=Sound.X+Sound.Width && Y>=Sound.Y && Y<=Sound.Y+Sound.Height){
 				if(*Cek_Sound){
-					PlaySound(TEXT(" "), NULL, SND_ASYNC);
+					PlaySound(TEXT(" "), NULL, SND_ASYNC);					//agar musik dapat berjalan
 					*Cek_Sound = false;
 				}
 				else {
-					PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);		//agar musik dapat dijalanka
+					PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);	//agar musik dapat dijalankan
 					*Cek_Sound = true;
 				}
 				Sound_Cek(Cek_Sound);
