@@ -11,8 +11,8 @@
 #define KeyDown 80
 #define KeyLeft 75
 #define KeyRight 77
-#define HOVER 1
-#define NOT_HOVER 0
+#define PRESS 1
+#define NOT_PRESS 0
 #define B_LEVEL	1
 #define B_SCORE	2
 #define B_ABOUT	3
@@ -34,7 +34,7 @@ typedef struct Button{
 		int Width,Height;
 		int X,Y;
 		const char *Image;
-		const char *Hover_Image;
+		const char *PRESS_Image;
 };
 
 //Variable Yang Di Share Antar File

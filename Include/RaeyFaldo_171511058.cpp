@@ -38,9 +38,11 @@ void Input_Nama(char *Nama){				// modul untuk input nama
              	readimagefile("Assets/bg_utama_level.bmp", 0, 0, 800, 600);
              	outtextxy (281,283, Nama);
 			}break;
+			
 			case 13: The_End = 1; break;	
 			// enter 
           	break;
+          	
 			default:						
 			// selain tombol bacspace, enter, esc
 	      		if(Input_Pos<10 && C==' '){
@@ -61,22 +63,22 @@ void Input_Nama(char *Nama){				// modul untuk input nama
 void Controller_Difficult(int *Action, boolean *Cek_Sound){		
 //modul untuk mengaktifkan tombol (jika suatu tombol diklik maka akan melakukan sesuatu)
 	
-	int Valid=0;			//untuk pengecekkan pengulangan
-	int X=-1,Y=-1;			//sebagainilai defult untuk koordinat x dan y
+	int Valid=0;	//untuk pengecekkan pengulangan
+	int X=-1,Y=-1;	//sebagainilai defult untuk koordinat x dan y
 	
-	while(Valid==0){		//
+	while(Valid==0){
 		getmouseclick(WM_LBUTTONDOWN,X,Y);
 		delay(200);
 		if(X>=Easy.X && X<=Easy.X+Easy.Width && Y>=Easy.Y && Y<=Easy.Y+Easy.Height){
-				Make_Button_Img(Easy,HOVER);
+				Make_Button_Img(Easy,PRESS);
 				Valid = 1;
 				*Action = B_EASY;
 		}else if(X>=Medium.X && X<=Medium.X+Medium.Width && Y>=Medium.Y && Y<=Medium.Y+Medium.Height){
-				Make_Button_Img(Medium,HOVER);
+				Make_Button_Img(Medium,PRESS);
 				Valid = 1;
 				*Action = B_MEDIUM;
 		}else if(X>=Hard.X && X<=Hard.X+Hard.Width && Y>=Hard.Y && Y<=Hard.Y+Hard.Height){
-				Make_Button_Img(Hard,HOVER);
+				Make_Button_Img(Hard,PRESS);
 			
 				Valid = 1;
 				*Action = B_HARD;
@@ -102,33 +104,33 @@ void Menu_Difficult(int *Action, boolean *Cek_Sound, char *Nama){
 	Easy.Height = 50; 							//Tinggi Button
 	Easy.Width = 150;							//Lebar Button
 	Easy.Image = "Assets/Easy.bmp";				//Kalau Ada Gambar Buttonnya
-	Easy.Hover_Image = "Assets/h_Easy.bmp";		//gambar button yang sudah diklik
+	Easy.PRESS_Image = "Assets/h_Easy.bmp";		//gambar button yang sudah diklik
 	
 	Medium.X = 325; 							//Koordinat X
 	Medium.Y = 425; 							//Koordinat y
 	Medium.Height = 50; 						//Tinggi Button
 	Medium.Width = 150;							//Lebar Button
 	Medium.Image = "Assets/Medium.bmp";			//Kalau Ada Gambar Buttonnya
-	Medium.Hover_Image = "Assets/h_Medium.bmp";	//gambar button yang sudah diklik
+	Medium.PRESS_Image = "Assets/h_Medium.bmp";	//gambar button yang sudah diklik
 	
 	Hard.X = 525; 								//Koordinat X
 	Hard.Y = 425; 								//Koordinat y
 	Hard.Height = 50; 							//Tinggi Button
 	Hard.Width = 150;							//Lebar Button
 	Hard.Image = "Assets/Hard.bmp";				//Kalau Ada Gambar Buttonnya
-	Hard.Hover_Image = "Assets/h_Hard.bmp";		//gambar button yang sudah diklik
+	Hard.PRESS_Image = "Assets/h_Hard.bmp";		//gambar button yang sudah diklik
 	
 	Sound.X=740;		Sound.Y=540;
 	Sound.Width=50;		Sound.Height=50;
 	Sound.Image="Assets/Sound.bmp";
-	Sound.Hover_Image="Assets/h_Sound.bmp";
+	Sound.PRESS_Image="Assets/h_Sound.bmp";
 	
 	readimagefile("Assets/bg_utama_level.bmp", 0, 0, 800, 600);
 	Input_Nama(Nama);
 	Sound_Cek(Cek_Sound);	
-	Make_Button_Img(Easy,NOT_HOVER);	
-	Make_Button_Img(Medium,NOT_HOVER);
-	Make_Button_Img(Hard,NOT_HOVER);
+	Make_Button_Img(Easy,NOT_PRESS);	
+	Make_Button_Img(Medium,NOT_PRESS);
+	Make_Button_Img(Hard,NOT_PRESS);
 	
 	Controller_Difficult(Action, Cek_Sound);
 }

@@ -89,13 +89,7 @@ void Draw_Puzz(int Grid_Size, int Puzzle_Size){
 	//mencocokan value array dengan indeks array gambar
 	for(I=0;I<Puzzle_Size;I++){
 		for(J=0;J<Puzzle_Size;J++){
-			Found=false;
-			for(K=1;K<=(Puzzle_Size*Puzzle_Size);K++){
-				if(Puzz_Rand[I][J]==K && not Found){
-					putimage(J*Grid_Size+75,I*Grid_Size+75,Img[K-1],COPY_PUT);
-					Found=true;
-				}
-			}
+			putimage(J*Grid_Size+75,I*Grid_Size+75,Img[Puzz_Rand[I][J]-1],COPY_PUT);
 		}
 	}
 	
@@ -106,21 +100,21 @@ void Draw_Puzz(int Grid_Size, int Puzzle_Size){
 //Membuat Tampilan Button Berbentuk Gambar (Ketika Press / Tidak)
 void Make_Button_Img(struct Button Button,int Style){
 	
-	if(Button.Image != NULL && Button.Hover_Image != NULL){
-		if(Style==NOT_HOVER) readimagefile( Button.Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
-		else readimagefile( Button.Hover_Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
+	if(Button.Image != NULL && Button.PRESS_Image != NULL){
+		if(Style==NOT_PRESS) readimagefile( Button.Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
+		else readimagefile( Button.PRESS_Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
 	}
 }
 
 //Membuat Tampilan Button Untuk Halaman Game
 void Draw_Button_Game(){
-	Make_Button_Img(Up,NOT_HOVER);
-	Make_Button_Img(Down,NOT_HOVER);
-	Make_Button_Img(Left,NOT_HOVER);
-	Make_Button_Img(Right,NOT_HOVER);
-	Make_Button_Img(Reset,NOT_HOVER);
-	Make_Button_Img(Solve,NOT_HOVER);
-	Make_Button_Img(Exit,NOT_HOVER);	
+	Make_Button_Img(Up,NOT_PRESS);
+	Make_Button_Img(Down,NOT_PRESS);
+	Make_Button_Img(Left,NOT_PRESS);
+	Make_Button_Img(Right,NOT_PRESS);
+	Make_Button_Img(Reset,NOT_PRESS);
+	Make_Button_Img(Solve,NOT_PRESS);
+	Make_Button_Img(Exit,NOT_PRESS);	
 }
 
 void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
@@ -156,25 +150,25 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 				key = getch();
 				switch(key){
 					case KeyUp :
-						Make_Button_Img(Up,HOVER);
+						Make_Button_Img(Up,PRESS);
 						Movement_Array(KeyUp,Puzzle_Size,&Movement);
 						Valid = 1;
 						*Action = NO_ACT;
 						break;
 					case KeyDown :
-						Make_Button_Img(Down,HOVER);
+						Make_Button_Img(Down,PRESS);
 						Movement_Array(KeyDown,Puzzle_Size,&Movement);
 						Valid = 1;
 						*Action = NO_ACT;
 						break;
 					case KeyLeft :
-						Make_Button_Img(Left,HOVER);
+						Make_Button_Img(Left,PRESS);
 						Movement_Array(KeyLeft,Puzzle_Size,&Movement);
 						Valid = 1;
 						*Action = NO_ACT;
 						break;
 					case KeyRight :
-						Make_Button_Img(Right,HOVER);
+						Make_Button_Img(Right,PRESS);
 						Movement_Array(KeyRight,Puzzle_Size,&Movement);
 						Valid = 1;
 						*Action = NO_ACT;
@@ -185,7 +179,7 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Up
 			if(X>=Up.X && X<=Up.X+Up.Width && Y>=Up.Y && Y<=Up.Y+Up.Height){
-				Make_Button_Img(Up,HOVER);
+				Make_Button_Img(Up,PRESS);
 				Movement_Array(KeyUp,Puzzle_Size,&Movement);
 				Valid = 1;
 				*Action = NO_ACT;
@@ -193,7 +187,7 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Down
 			else if(X>=Down.X && X<=Down.X+Down.Width && Y>=Down.Y && Y<=Down.Y+Down.Height){
-				Make_Button_Img(Down,HOVER);
+				Make_Button_Img(Down,PRESS);
 				Movement_Array(KeyDown,Puzzle_Size,&Movement);
 				Valid = 1;
 				*Action = NO_ACT;
@@ -201,7 +195,7 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Left
 			else if(X>=Left.X && X<=Left.X+Left.Width && Y>=Left.Y && Y<=Left.Y+Left.Height){
-				Make_Button_Img(Left,HOVER);
+				Make_Button_Img(Left,PRESS);
 				Movement_Array(KeyLeft,Puzzle_Size,&Movement);
 				Valid = 1;
 				*Action = NO_ACT;
@@ -209,7 +203,7 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Right
 			else if(X>=Right.X && X<=Right.X+Right.Width && Y>=Right.Y && Y<=Right.Y+Right.Height){
-				Make_Button_Img(Right,HOVER);
+				Make_Button_Img(Right,PRESS);
 				Movement_Array(KeyRight,Puzzle_Size,&Movement);
 				Valid = 1;
 				*Action = NO_ACT;
@@ -217,7 +211,7 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Reset
 			else if(X>=Reset.X && X<=Reset.X+Reset.Width && Y>=Reset.Y && Y<=Reset.Y+Reset.Height){
-				Make_Button_Img(Reset,HOVER);
+				Make_Button_Img(Reset,PRESS);
 				Valid = 1;
 				Win = -1;
 				*Action = Temp_Action;
@@ -225,13 +219,13 @@ void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 			
 			//Button Solve
 			else if(X>=Solve.X && X<=Solve.X+Solve.Width && Y>=Solve.Y && Y<=Solve.Y+Solve.Height){
-				Make_Button_Img(Solve,HOVER);
+				Make_Button_Img(Solve,PRESS);
 				Valid = 1;
 			}
 			
 			//Button EXit
 			else if(X>=Exit.X && X<=Exit.X+Exit.Width && Y>=Exit.Y && Y<=Exit.Y+Exit.Height){
-				Make_Button_Img(Exit,HOVER);
+				Make_Button_Img(Exit,PRESS);
 				*Action=0;
 				Valid = 1;
 				Win = -1;
@@ -335,49 +329,49 @@ void Game_Menu(int *Action, boolean *Cek_Sound, char *Nama, int Puzzle_Size){
 	Up.X=650;		Up.Y=350;
 	Up.Width=50;	Up.Height=50;
 	Up.Image="Assets/Up.bmp";
-	Up.Hover_Image="Assets/h_Up.bmp";
+	Up.PRESS_Image="Assets/h_Up.bmp";
 	
 	//Down
 	Down.X=650;		Down.Y=450;
 	Down.Width=50;	Down.Height=50;
 	Down.Image="Assets/Down.bmp";
-	Down.Hover_Image="Assets/h_Down.bmp";
+	Down.PRESS_Image="Assets/h_Down.bmp";
 	
 	//Left 
 	Left.X=600;		Left.Y=400;
 	Left.Width=50;	Left.Height=50;
 	Left.Image="Assets/Left.bmp";
-	Left.Hover_Image="Assets/h_Left.bmp";
+	Left.PRESS_Image="Assets/h_Left.bmp";
 	
 	//Right
 	Right.X=700;		Right.Y=400;
 	Right.Width=50;		Right.Height=50;
 	Right.Image="Assets/Right.bmp";
-	Right.Hover_Image="Assets/h_Right.bmp";
+	Right.PRESS_Image="Assets/h_Right.bmp";
 	
 	//Sound
 	Sound.X=740;		Sound.Y=540;
 	Sound.Width=50;		Sound.Height=50;
 	Sound.Image="Assets/Sound.bmp";
-	Sound.Hover_Image="Assets/h_Sound.bmp";
+	Sound.PRESS_Image="Assets/h_Sound.bmp";
 	
 	//Reset
 	Reset.X=250;		Reset.Y=550;
 	Reset.Width=75;		Reset.Height=35;
 	Reset.Image="Assets/reset.bmp";
-	Reset.Hover_Image="Assets/h_reset.bmp";
+	Reset.PRESS_Image="Assets/h_reset.bmp";
 	
 	//Solve
 	Solve.X=375;		Solve.Y=550;
 	Solve.Width=75;		Solve.Height=35;
 	Solve.Image="Assets/solve.bmp";
-	Solve.Hover_Image="Assets/h_solve.bmp";
+	Solve.PRESS_Image="Assets/h_solve.bmp";
 	
 	//Exit
 	Exit.X=125;			Exit.Y=550;
 	Exit.Width=75;		Exit.Height=35;
 	Exit.Image="Assets/g_exit.bmp";
-	Exit.Hover_Image="Assets/h_g_exit.bmp";	
+	Exit.PRESS_Image="Assets/h_g_exit.bmp";	
 	
 	//Inisialisasi Puzzle
 	Init_Puzz (Puzzle_Size);

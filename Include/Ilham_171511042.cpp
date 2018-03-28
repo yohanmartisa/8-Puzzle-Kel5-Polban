@@ -19,7 +19,7 @@ void Draw_Button_And_List_Highscore(int *Action, boolean *Cek_Sound){
 	Back.Width = 150;								// Lebar button back
 	Back.Height = 50;								// Tinggi button back
 	Back.Image = "Assets/Back.bmp";					// Gambar button back
-	Back.Hover_Image = "Assets/h_Back.bmp";			// Gambar button back ketika di click / hover
+	Back.PRESS_Image = "Assets/h_Back.bmp";			// Gambar button back ketika di click / PRESS
 	
 	//Button Exit
 	Exit.X = 500;									// Koordinat X button exit
@@ -27,7 +27,7 @@ void Draw_Button_And_List_Highscore(int *Action, boolean *Cek_Sound){
 	Exit.Width = 150;								// Lebar button exit
 	Exit.Height = 50;								// Tinggi button exit
 	Exit.Image = "Assets/Exit.bmp";					// Gambar button exit
-	Exit.Hover_Image = "Assets/h_exit.bmp";			// Gambar button exit ketika di click / hover
+	Exit.PRESS_Image = "Assets/h_exit.bmp";			// Gambar button exit ketika di click / PRESS
 	
 	//Button Sound
 	Sound.X=740;									// Koordinat X button sound
@@ -35,10 +35,10 @@ void Draw_Button_And_List_Highscore(int *Action, boolean *Cek_Sound){
 	Sound.Width=50;									// Lebar button sound
 	Sound.Height=50;								// Tinggi button sound
 	Sound.Image="Assets/sound.bmp"; 				// Gambar button sound
-	Sound.Hover_Image="Assets/h_sound.bmp";			// Gambar button sound ketika di click / hover
+	Sound.PRESS_Image="Assets/h_sound.bmp";			// Gambar button sound ketika di click / PRESS
 	
-	Make_Button_Img(Back,NOT_HOVER);				// Membuat button back sesuai dengan spesifikasi
-	Make_Button_Img(Exit,NOT_HOVER);				// Membuat button exit sesuai dengan spesifikasi
+	Make_Button_Img(Back,NOT_PRESS);				// Membuat button back sesuai dengan spesifikasi
+	Make_Button_Img(Exit,NOT_PRESS);				// Membuat button exit sesuai dengan spesifikasi
 	Sound_Cek(Cek_Sound);							// Modul untuk mengecek apakah button sound di click atau tidak
 	Show_Score();									// Modul untuk menampilkan highscore
 	Controller_Skor(Action, Cek_Sound);				// Modul controller pada highscore
@@ -51,12 +51,12 @@ void Controller_Skor(int *Action, boolean *Cek_Sound){
 		getmouseclick(WM_LBUTTONDOWN,X,Y);
 		delay(100);
 		if(X>=Back.X && X<=Back.X+Back.Width && Y>=Back.Y && Y<=Back.Y+Back.Height){
-			Make_Button_Img(Back,HOVER);
+			Make_Button_Img(Back,PRESS);
 			Valid = 1;
 			*Action = NO_ACT;
 		}
 		else if(X>=Exit.X && X<=Exit.X+Exit.Width && Y>=Exit.Y && Y<=Exit.Y+Exit.Height){
-			Make_Button_Img(Exit,HOVER);
+			Make_Button_Img(Exit,PRESS);
 			Valid = 1;
 			*Action = B_EXIT;
 		}
