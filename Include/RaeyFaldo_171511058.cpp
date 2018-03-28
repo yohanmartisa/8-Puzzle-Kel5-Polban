@@ -1,133 +1,134 @@
 #include "RaeyFaldo_171511058.h"
-button easy,medium,hard;
-void awal(){
-		readimagefile("Assets/bg_blank.bmp",0,0,800,600);
+Button Easy, Medium, Hard;				//variabel bertipe Button dengan subvar-sbuvar untuk menyatakan tinggi lebar tombol
+void Awal(){							//modul untuk menampilkan interface paling awal
+		readimagefile("Assets/bg_blank.bmp",0,0,800,600);			//untuk menampilkan gambar backround
 		while(!kbhit()){
 			delay(500);
-			readimagefile("Assets/press.bmp",200,500,600,545);
-			readimagefile("Assets/load_img1.bmp",325,250,470,410);
+			readimagefile("Assets/press.bmp",200,500,600,545);		//untuk menampilkan gambar "press any key to continue"
+			readimagefile("Assets/load_img1.bmp",325,250,470,410);	//untuk menampilkan gambar ayam
 			
 			delay(500);
-			readimagefile("Assets/press_h.bmp",200,500,600,545);
+			readimagefile("Assets/press_h.bmp",200,500,600,545);	//untuk menampilkan gambar
 			delay(500);
-			readimagefile("Assets/load_img2.bmp",325,250,470,410);
+			readimagefile("Assets/load_img2.bmp",325,250,470,410);	//untuk menampilkan gambar ayam yang berbeda
 		}
 	}
 	
-void input_nama(char *nama){
-	char c;
-	int input_pos=0, the_end=0,i;
+void Input_Nama(char *Nama){				// modul untuk input nama
+	char C;									//variabel untuk menampung input dari keyboard (getch())
+	int Input_Pos=0;						//variabel pointer
+	int The_End=0;							//kondisi untuk keluar dari looping input dari keyboard
+	int I;									//variabel yang digunakan untuk pengulnagan
 	while(kbhit()) getch();
-	for(i = 0; i < 11; i++) nama[i] = 0;
+	for(I = 0; I < 11; I++) Nama[I] = 0;
 	
 	settextstyle(3, HORIZ_DIR, 4);
-	do{		
-		outtextxy (281,283, nama);
-		c = getch();	
-		switch (c){
-			case 8: 						/* backspace */
-          	if (input_pos){
-          		nama[input_pos] = 0;
-             	input_pos--;
-             	nama[input_pos] = 0;
+	do{										
+	// pengulangan untuk menginput nama
+		outtextxy (281,283, Nama);
+		C = getch();	
+		switch (C){
+			case 8: 						
+			// backspace 
+          	if (Input_Pos){
+          		Nama[Input_Pos] = 0;
+             	Input_Pos--;
+             	Nama[Input_Pos] = 0;
              	cleardevice();
              	readimagefile("Assets/bg_utama_level.bmp", 0, 0, 800, 600);
-             	outtextxy (281,283, nama);
+             	outtextxy (281,283, Nama);
 			}break;
-			case 13: the_end = 1; break;	/* return */
-			case 27: 						/* Escape = Abort */
-          		nama[0] = 0;
-          		the_end = 1;
+			case 13: The_End = 1; break;	
+			// enter 
           	break;
-			default:
-	      		if(input_pos<10 && c==' '){
-	      			nama[input_pos] = '_';
-	      			input_pos++;
-	      			nama[input_pos] = 0;
+			default:						
+			// selain tombol bacspace, enter, esc
+	      		if(Input_Pos<10 && C==' '){
+	      			Nama[Input_Pos] = '_';
+	      			Input_Pos++;
+	      			Nama[Input_Pos] = 0;
 				  }
-				else if (input_pos < 10 && c >= ' ' && c <= '~'){
-	         		nama[input_pos] = c;
-	         		input_pos++;
-	         		nama[input_pos] = 0;
+				else if (Input_Pos < 10 && C >= ' ' && C <= '~'){
+	         		Nama[Input_Pos] = C;
+	         		Input_Pos++;
+	         		Nama[Input_Pos] = 0;
 	      		  }
     	}
-	}while (!the_end);
+	}while (!The_End);						
+	//pengulanag akan berhenti jika The_End tidak bernilai 0
 }
 
-void controller_difficult(int *action, boolean *ceksound){
-	int valid=0;
-	int x=-1,y=-1;
-	int psound=0;
+void Controller_Difficult(int *Action, boolean *Cek_Sound){		
+//modul untuk mengaktifkan tombol (jika suatu tombol diklik maka akan melakukan sesuatu)
 	
-	while(valid==0){
-		getmouseclick(WM_LBUTTONDOWN,x,y);
+	int Valid=0;			//untuk pengecekkan pengulangan
+	int X=-1,Y=-1;			//sebagainilai defult untuk koordinat x dan y
+	
+	while(Valid==0){		//
+		getmouseclick(WM_LBUTTONDOWN,X,Y);
 		delay(200);
-		if(x>=easy.x && x<=easy.x+easy.width && y>=easy.y && y<=easy.y+easy.height){
-				make_button_img(easy,HOVER);
-				valid = 1;
-				*action = B_EASY;
-		}else if(x>=medium.x && x<=medium.x+medium.width && y>=medium.y && y<=medium.y+medium.height){
-				make_button_img(medium,HOVER);
+		if(X>=Easy.X && X<=Easy.X+Easy.Width && Y>=Easy.Y && Y<=Easy.Y+Easy.Height){
+				Make_Button_Img(Easy,HOVER);
+				Valid = 1;
+				*Action = B_EASY;
+		}else if(X>=Medium.X && X<=Medium.X+Medium.Width && Y>=Medium.Y && Y<=Medium.Y+Medium.Height){
+				Make_Button_Img(Medium,HOVER);
+				Valid = 1;
+				*Action = B_MEDIUM;
+		}else if(X>=Hard.X && X<=Hard.X+Hard.Width && Y>=Hard.Y && Y<=Hard.Y+Hard.Height){
+				Make_Button_Img(Hard,HOVER);
 			
-				valid = 1;
-				*action = B_MEDIUM;
-		}else if(x>=hard.x && x<=hard.x+hard.width && y>=hard.y && y<=hard.y+hard.height){
-				make_button_img(hard,HOVER);
-			
-				valid = 1;
-				*action = B_HARD;
+				Valid = 1;
+				*Action = B_HARD;
 		}
-		else if(x>=sound.x && x<=sound.x+sound.width && y>=sound.y && y<=sound.y+sound.height){
-			psound=psound+1;
-			if((psound%2==1) && (*ceksound == true)){
-				mciSendString("pause myMidi",0,0,0);
-				make_button_img(sound,HOVER);
-				*ceksound = false;
+		else if(X>=Sound.X && X<=Sound.X+Sound.Width && Y>=Sound.Y && Y<=Sound.Y+Sound.Height){
+			if(*Cek_Sound){
+				PlaySound(TEXT(" "), NULL,SND_ASYNC);
+				*Cek_Sound = false;
 			}
 			else {
-				make_button_img(sound,NOT_HOVER);
-				mciSendString("resume myMidi",0,0,0);
-				*ceksound = true;	
+				PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
+				*Cek_Sound = true;	
 			}
+			Sound_Cek(Cek_Sound);
 		}
 	}
 }
 
-void Menu_Difficult(int *action, boolean *ceksound, char *nama){
+void Menu_Difficult(int *Action, boolean *Cek_Sound, char *Nama){
 	
-	easy.x = 125; 		//Koordinat x
-	easy.y = 425; 		//Koordinat y
-	easy.height = 50; 	//Tinggi Button
-	easy.width = 150;	//Lebar Button
-	easy.image = "Assets/Easy.bmp";		//Kalau Ada Gambar Buttonnya
-	easy.hover_image = "Assets/h_Easy.bmp";
+	Easy.X = 125; 								//Koordinat X
+	Easy.Y = 425; 								//Koordinat y
+	Easy.Height = 50; 							//Tinggi Button
+	Easy.Width = 150;							//Lebar Button
+	Easy.Image = "Assets/Easy.bmp";				//Kalau Ada Gambar Buttonnya
+	Easy.Hover_Image = "Assets/h_Easy.bmp";		//gambar button yang sudah diklik
 	
-	//Alokasi Button Pertama
-	medium.x = 325; 		//Koordinat x
-	medium.y = 425; 		//Koordinat y
-	medium.height = 50; 	//Tinggi Button
-	medium.width = 150;		//Lebar Button
-	medium.image = "Assets/Medium.bmp";		//Kalau Ada Gambar Buttonnya
-	medium.hover_image = "Assets/h_Medium.bmp";
+	Medium.X = 325; 							//Koordinat X
+	Medium.Y = 425; 							//Koordinat y
+	Medium.Height = 50; 						//Tinggi Button
+	Medium.Width = 150;							//Lebar Button
+	Medium.Image = "Assets/Medium.bmp";			//Kalau Ada Gambar Buttonnya
+	Medium.Hover_Image = "Assets/h_Medium.bmp";	//gambar button yang sudah diklik
 	
-	hard.x = 525; 		//Koordinat x
-	hard.y = 425; 		//Koordinat y
-	hard.height = 50; 	//Tinggi Button
-	hard.width = 150;	//Lebar Button
-	hard.image = "Assets/Hard.bmp";		//Kalau Ada Gambar Buttonnya
-	hard.hover_image = "Assets/h_Hard.bmp";
+	Hard.X = 525; 								//Koordinat X
+	Hard.Y = 425; 								//Koordinat y
+	Hard.Height = 50; 							//Tinggi Button
+	Hard.Width = 150;							//Lebar Button
+	Hard.Image = "Assets/Hard.bmp";				//Kalau Ada Gambar Buttonnya
+	Hard.Hover_Image = "Assets/h_Hard.bmp";		//gambar button yang sudah diklik
 	
-	sound.x=740;		sound.y=540;
-	sound.width=50;		sound.height=50;
-	sound.image="Assets/sound.bmp";
-	sound.hover_image="Assets/h_sound.bmp";
+	Sound.X=740;		Sound.Y=540;
+	Sound.Width=50;		Sound.Height=50;
+	Sound.Image="Assets/Sound.bmp";
+	Sound.Hover_Image="Assets/h_Sound.bmp";
 	
 	readimagefile("Assets/bg_utama_level.bmp", 0, 0, 800, 600);
-	input_nama(nama);
-	soundcek(ceksound);	
-	make_button_img(easy,NOT_HOVER);
-	make_button_img(medium,NOT_HOVER);
-	make_button_img(hard,NOT_HOVER);
+	Input_Nama(Nama);
+	Sound_Cek(Cek_Sound);	
+	Make_Button_Img(Easy,NOT_HOVER);	
+	Make_Button_Img(Medium,NOT_HOVER);
+	Make_Button_Img(Hard,NOT_HOVER);
 	
-	controller_difficult(action, ceksound);
+	Controller_Difficult(Action, Cek_Sound);
 }

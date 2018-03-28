@@ -8,11 +8,11 @@
 #include "Firna_171511040.h"
 #include "Ali_171511035.h"
 
-void awal();
+void Awal();														//modul untuk menampilkan interface paling awal
 //Tampilan Awal
-void Menu_Difficult(int *action, boolean *ceksound, char *nama);
-void input_nama(char *nama);
-void controller_difficult(int *action, boolean *ceksound);
+void Menu_Difficult(int *Action, boolean *Cek_Sound, char *Nama);	//modul untuk mengaktifkan tombol (jika suatu tombol diklik maka akan melakukan sesuatu)
+void Input_Nama(char *Nama);										// modul untuk input nama
+void Controller_Difficult(int *Action, boolean *Ceksound);			////modul untuk mengaktifkan tombol (jika suatu tombol diklik maka akan melakukan sesuatu)
 
 
 #endif

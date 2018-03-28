@@ -18,75 +18,75 @@
 #define B_ABOUT	3
 #define B_EXIT	4
 #define B_EASY	11
-#define B_MEDIUM	12
+#define B_MEDIUM 12
 #define B_HARD	13
 #define ACT_END	21
 #define NO_ACT 100
 
 //Tipe Data Puzzle
-typedef int puzzle;
+typedef int Puzzle;
 
 //Tipe Data Image
-typedef void *image;
+typedef void *Image;
 
 //Tipe Data Button
-typedef struct button{
-		int width,height;
-		int x,y;
-		const char *image;
-		const char *hover_image;
+typedef struct Button{
+		int Width,Height;
+		int X,Y;
+		const char *Image;
+		const char *Hover_Image;
 };
 
 //Variable Yang Di Share Antar File
-extern puzzle puzz_final[5][5];
-extern puzzle puzz_rand[5][5];
-extern button sound,Exit,Back;
-extern int x_puzz, y_puzz;
+extern Puzzle Puzz_Final[5][5];
+extern Puzzle Puzz_Rand[5][5];
+extern Button Sound,Exit,Back;
+extern int X_Puzz, Y_Puzz;
 
 //Tipedata Times
-typedef struct times{
-		int hour;
-		int min;
-		int sec;
-		int msec;
+typedef struct Times{
+		int Hour;
+		int Min;
+		int Sec;
+		int Msec;
 };
 
 
-void waktu(int Delay);
+void Waktu(int Delay);
 // Prosedur Untuk Menghitung waktu pengerjaan
 // Diambil Dari Penjumlahan Delay (Ms)
 
-void game_menu(int *action, boolean *ceksound,char *nama,int puzzle_size);
+void Game_Menu(int *Action, boolean *Ceksound,char *Nama,int Puzzle_Size);
 // Halaman Untuk Menampilkan Game Puzzle
 
-void DrawButtonGame();
+void Draw_Button_Game();
 //Menampilkan Button Game
 
-void make_button_img(struct button Button,int style);
+void Make_Button_Img(struct Button Button,int Style);
 //Menampilkan Button Press/Tidaknya
 
-void DeAlocGambar();
+void De_Aloc_Img();
 //Dealokasi Gambar di Memory
 
-void controller_game(int *action, boolean *ceksound,int puzzle_size);
+void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size);
 //Kontroller Mouse Untuk Menu Game
 
-void InitPuzz(int puzzle_size);
+void Init_Puzz(int Puzzle_Size);
 //Generate Puzzle Array 2D untuk ukurannnya sesuai puzzle size
 //Isi Array Integer Berupa Increment Value
 
-void SaveImgMemory(const char* filename, const char* thumbs,int grid_size,int puzzle_size);
+void Save_Img_Memory(const char* Filename, const char* Thumbs,int Grid_Size,int Puzzle_Size);
 //Menampung Potongan Gambar kedalam Memory
 //Ada 2 Proses Yang Pertama menampung Thumbnail dan Yang Kedua Potongan Gambar
 //Grid_size untuk Mengatur width/Height untuk memotong gambar
 //puzzle_size untuk ukuran puzzle
 
-void BorderPuzz(int grid_size,int puzzle_size);
+void Border_Puzz(int Grid_Size,int Puzzle_Size);
 //Menampilkan Border Putih untuk membatasi puzzle
 
-void DrawPuzz(int grid_size,int puzzle_size);
+void Draw_Puzz(int Grid_Size,int Puzzle_Size);
 //Menampilkan Gambar Puzzle
 
-void Movement(int Control,int puzzle_size, int *movement);
+void Movement_Array(int Control,int Puzzle_Size, int *Movement);
 //Mengatur Perpindahan Array 
 #endif

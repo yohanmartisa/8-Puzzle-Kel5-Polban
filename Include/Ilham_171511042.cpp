@@ -1,74 +1,75 @@
 #include "ilham_171511042.h"
-FILE *in, *out;
+FILE *In, *Out;
 
-void HighScore_Menu(int *action, boolean *ceksound)
+void Highscore_Menu(int *Action, boolean *Cek_Sound)
 {
-	readimagefile("Assets/bg_highscore.bmp",0,0,800,600);
-	rectangle(150,100,650,400);
-	line(150,150,650,150);
-	setfillstyle(1,BLACK);
-	floodfill(155,155,WHITE);
-	Draw_Button_HighScore(action, ceksound);	
+	readimagefile("Assets/bg_highscore.bmp",0,0,800,600);		// Menampilkan background
+	rectangle(150,100,650,400);									// Membuat box highscore
+	line(150,150,650,150);										// Memisahkan box highscore dan judul box
+	setfillstyle(1,BLACK);										// Memberi fill berwarna hitam
+	floodfill(155,155,WHITE);									// Memberi fill berwarna hitam pada box yang bordernya berwarna putih
+	Draw_Button_And_List_Highscore(Action, Cek_Sound);			// Menggambar command button dan menampilkan list highscore
 }
 
-void Draw_Button_HighScore(int *action, boolean *ceksound){	
+void Draw_Button_And_List_Highscore(int *Action, boolean *Cek_Sound){	
 
-	Back.x = 150;			// Koordinat X
-	Back.y = 425;			// Koordinat Y
-	Back.width = 150;		// Lebar button
-	Back.height = 50;		// Tinggi button
-	Back.image = "Assets/Back.bmp";
-	Back.hover_image = "Assets/h_Back.bmp";
+	//Button Back
+	Back.X = 150;									// Koordinat X button back
+	Back.Y = 425;									// Koordinat Y button back
+	Back.Width = 150;								// Lebar button back
+	Back.Height = 50;								// Tinggi button back
+	Back.Image = "Assets/Back.bmp";					// Gambar button back
+	Back.Hover_Image = "Assets/h_Back.bmp";			// Gambar button back ketika di click / hover
 	
-	Exit.x = 500;			// Koordinat X
-	Exit.y = 425;			// Koordinat Y
-	Exit.width = 150;		// Lebar button
-	Exit.height = 50;		// Tinggi button
-	Exit.image = "Assets/Exit.bmp";
-	Exit.hover_image = "Assets/h_exit.bmp";
+	//Button Exit
+	Exit.X = 500;									// Koordinat X button exit
+	Exit.Y = 425;									// Koordinat Y button exit
+	Exit.Width = 150;								// Lebar button exit
+	Exit.Height = 50;								// Tinggi button exit
+	Exit.Image = "Assets/Exit.bmp";					// Gambar button exit
+	Exit.Hover_Image = "Assets/h_exit.bmp";			// Gambar button exit ketika di click / hover
 	
 	//Button Sound
-	sound.x=740;		sound.y=540;
-	sound.width=50;		sound.height=50;
-	sound.image="Assets/sound.bmp"; 
-	sound.hover_image="Assets/h_sound.bmp";
+	Sound.X=740;									// Koordinat X button sound
+	Sound.Y=540;									// Koordinat Y button sound
+	Sound.Width=50;									// Lebar button sound
+	Sound.Height=50;								// Tinggi button sound
+	Sound.Image="Assets/sound.bmp"; 				// Gambar button sound
+	Sound.Hover_Image="Assets/h_sound.bmp";			// Gambar button sound ketika di click / hover
 	
-	make_button_img(Back,NOT_HOVER);	
-	make_button_img(Exit,NOT_HOVER);
-	soundcek(ceksound);
-	Show_Score();
-	controller_Skor(action, ceksound);
+	Make_Button_Img(Back,NOT_HOVER);				// Membuat button back sesuai dengan spesifikasi
+	Make_Button_Img(Exit,NOT_HOVER);				// Membuat button exit sesuai dengan spesifikasi
+	Sound_Cek(Cek_Sound);							// Modul untuk mengecek apakah button sound di click atau tidak
+	Show_Score();									// Modul untuk menampilkan highscore
+	Controller_Skor(Action, Cek_Sound);				// Modul controller pada highscore
 }
 
-void controller_Skor(int *action, boolean *ceksound){
-	int valid=0;
-	int x=-1,y=-1;
-	int psound=0;
-	while(valid==0){
-		getmouseclick(WM_LBUTTONDOWN,x,y);
+void Controller_Skor(int *Action, boolean *Cek_Sound){
+	int Valid=0;									// 
+	int X=-1,Y=-1;
+	while(Valid==0){
+		getmouseclick(WM_LBUTTONDOWN,X,Y);
 		delay(100);
-		if(x>=Back.x && x<=Back.x+Back.width && y>=Back.y && y<=Back.y+Back.height){
-			make_button_img(Back,HOVER);
-			valid = 1;
-			*action = NO_ACT;
+		if(X>=Back.X && X<=Back.X+Back.Width && Y>=Back.Y && Y<=Back.Y+Back.Height){
+			Make_Button_Img(Back,HOVER);
+			Valid = 1;
+			*Action = NO_ACT;
 		}
-		else if(x>=Exit.x && x<=Exit.x+Exit.width && y>=Exit.y && y<=Exit.y+Exit.height){
-			make_button_img(Exit,HOVER);
-			valid = 1;
-			*action = B_EXIT;
+		else if(X>=Exit.X && X<=Exit.X+Exit.Width && Y>=Exit.Y && Y<=Exit.Y+Exit.Height){
+			Make_Button_Img(Exit,HOVER);
+			Valid = 1;
+			*Action = B_EXIT;
 		}
-		else if(x>=sound.x && x<=sound.x+sound.width && y>=sound.y && y<=sound.y+sound.height){
-			psound=psound+1;
-			if((psound%2==1) && (*ceksound == true)){
-				mciSendString("pause myMidi",0,0,0);
-				make_button_img(sound,HOVER);
-				*ceksound = false;
+		else if(X>=Sound.X && X<=Sound.X+Sound.Width && Y>=Sound.Y && Y<=Sound.Y+Sound.Height){
+			if(*Cek_Sound){
+				PlaySound(TEXT(" "), NULL, SND_ASYNC);
+				*Cek_Sound = false;
 			}
 			else {
-				make_button_img(sound,NOT_HOVER);
-				mciSendString("resume myMidi",0,0,0);
-				*ceksound = true;	
+				PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
+				*Cek_Sound = true;	
 			}
+			Sound_Cek(Cek_Sound);
 		}
 	}
 	delay(500);
@@ -76,97 +77,99 @@ void controller_Skor(int *action, boolean *ceksound){
 }
 
 
-void Write_Score(int level)
+void Write_Score(int Level)							// Modul untuk mencatat highscore ke file
 {
-	switch(level){
-		case 11 : {
-			player.level = "EASY";
+	switch(Level){									// Switch case, untuk menkonversi kode level yg bertipe integer ke char
+		case 11 : {									// Jika level = 11
+			Player.Level = "EASY";						// Maka level game adalah easy
 			break;
 		}
 		
-		case 12 : {
-			player.level = "MEDIUM";
+		case 12 : {									// Jika level = 12
+			Player.Level = "MEDIUM";					// Maka level game adalah medium
 			break;
 		}
 		
-		case 13 : {
-			player.level = "HARD";
+		case 13 : {									// Jika level = 13
+			Player.Level = "HARD";						// Maka level game adalah hard
 			break;
 		}
 	}
 	
-	if((out=fopen("highscore.dat","ab+"))==NULL)
+	if((Out=fopen("highscore.dat","ab+"))==NULL)	// Mengakses (membuka) file dan mengecek apakah file tersebut bisa di buka atau tidak
 	{
-		printf("File tidak dapat dibuat!\r\n");
-		exit(1);
+		printf("File tidak dapat dibuat!\r\n");			// Jika file tidak dapat dibuka, maka menampilkan informasi pada console app
+		exit(1);										// Keluar dari program (game)
 	}
-	fwrite(&player,sizeof(player),1,out);	
-	fclose(out);
+	fwrite(&Player,sizeof(Player),1,Out);			// Mencatat (menyalin) dari Record Player ke file
+	fclose(Out);									// Menutup file
 }
 
-void Show_Score()
+void Show_Score()											// Modul untuk menampilkan Highscore dari file
 {
-	Sort_Score();
-	Pengguna temp;
-	int count=0;
-	char print[30],printnama[30],printlevel[30],printscore[30];
-	int xnama = 155, yscore = 155, xscore = 485, xlevel = 320;
-	if((in=fopen("highscore.dat","rb"))==NULL)
+	Sort_Score();											// Modul untuk menyortir dari skor terbesar ke terkecil
+	Pengguna Temp;											/* Variabel Temp bertipe Pengguna berfungsi untuk menyimpan data 
+																 sementara dari file untuk di tampilkan*/
+	int Count=0;											/* Variabel Count bertipe Integer berfungsi untuk menghitung
+																 berapa jumlah data yang telah di tampilkan*/
+	char	Print_Nama[30],									// Variabel yg berfungsi menyimpan data dari hasil operasi sprintf dari Temp.Nama utk ditampilkan
+			Print_Level[30],								// Variabel yg berfungsi menyimpan data dari hasil operasi sprintf dari Temp.Level utk ditampilkan
+			Print_Score[30];								// Variabel yg berfungsi menyimpan data dari hasil operasi sprintf dari Temp.Score utk ditampilkan
+	int	X_Score = 155,										// Variabel yg digunakan untuk menampilkan 
+		Y_Score = 155;
+	if((In=fopen("highscore.dat","rb"))==NULL)
 	{
 		printf("File tidak dapat dibuat!\r\n");
 		//exit(1);
 	}
 	else{
-		while((fread(&temp,sizeof(temp),1,in)) && count<10){
-//			sprintf(print, "%s \t\t\t %s \t\t\t %d", temp.nama, temp.level, temp.skor);
-		
-			//outtextxy(xnama, yscore, print);
-			sprintf(printnama,"%s",temp.nama);
-			sprintf(printlevel,"%s",temp.level);
-			sprintf(printscore,"%d",temp.skor);
-			outtextxy(xnama, yscore, printnama);
-			outtextxy(xnama+150, yscore, printlevel);
-			outtextxy(xnama+250, yscore, printscore);
-			yscore = yscore + 25;
+		while((fread(&Temp,sizeof(Temp),1,In)) && Count<10){
+			sprintf(Print_Nama,"%s",Temp.Nama);
+			sprintf(Print_Level,"%s",Temp.Level);
+			sprintf(Print_Score,"%d",Temp.Skor);
+			outtextxy(X_Score, Y_Score, Print_Nama);
+			outtextxy(X_Score+150, Y_Score, Print_Level);
+			outtextxy(X_Score+250, Y_Score, Print_Score);
+			Y_Score = Y_Score + 25;
 			delay(200);
-			count++;
+			Count++;
 		}
 		printf("\n");
-		fclose(in);
+		fclose(In);
 	}
 }
 
 void Sort_Score(){
-	if((out=fopen("highscore.dat","rb+"))==NULL)
+	if((Out=fopen("highscore.dat","rb+"))==NULL)
 	{
 		printf("File tidak dapat dibuat!\r\n");
 	}
 	else {
-		Pengguna temp;
-		int structSize;
-		int fileSize;
+		Pengguna Temp;
+		int Struct_Size;
+		int File_Size;
 		
-		structSize = sizeof(player);
-		fseek(out, 0, SEEK_END);
-		fileSize = ftell(out);
-		rewind(out);
+		Struct_Size = sizeof(Player);
+		fseek(Out, 0, SEEK_END);
+		File_Size = ftell(Out);
+		rewind(Out);
 		  
-		for (int i = 0; i < fileSize; i += structSize){
-		  for (int j = 0; j < fileSize - structSize; j += structSize){
-		    fread(&player, structSize, 1, out);
-		    fread(&temp, structSize, 1, out);
-		    if (player.skor < temp.skor){
-		      fseek(out, -(structSize * 2), SEEK_CUR);
-		      fwrite(&temp, structSize, 1, out);
-		      fwrite(&player, structSize, 1, out);
-		      fseek(out, -structSize, SEEK_CUR);
+		for (int I = 0; I < File_Size; I += Struct_Size){
+		  for (int J = 0; J < File_Size - Struct_Size; J += Struct_Size){
+		    fread(&Player, Struct_Size, 1, Out);
+		    fread(&Temp, Struct_Size, 1, Out);
+		    if (Player.Skor < Temp.Skor){
+		      fseek(Out, -(Struct_Size * 2), SEEK_CUR);
+		      fwrite(&Temp, Struct_Size, 1, Out);
+		      fwrite(&Player, Struct_Size, 1, Out);
+		      fseek(Out, -Struct_Size, SEEK_CUR);
 		    }
 		    else{
-		      fseek(out, -structSize, SEEK_CUR);
+		      fseek(Out, -Struct_Size, SEEK_CUR);
 		    }
 		  }
-		  rewind(out);
+		  rewind(Out);
 		}
-		fclose(out);
+		fclose(Out);
 	}
 }

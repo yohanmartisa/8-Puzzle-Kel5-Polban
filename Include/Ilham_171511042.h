@@ -9,17 +9,17 @@
 #include "Firna_171511040.h"
 
 typedef struct Pengguna{
-	char nama[11];
-	int skor;
-	char *level;
+	char Nama[11];
+	int Skor;
+	char *Level;
 };
 
-extern Pengguna player,temp;
+extern Pengguna Player,Temp;
 
-void HighScore_Menu(int *action, boolean *ceksound);
-void Draw_Button_HighScore(int *action, boolean *ceksound);
-void controller_Skor(int *action, boolean *ceksound);
-void Write_Score(int level);
+void Highscore_Menu(int *Action, boolean *Cek_Sound);
+void Draw_Button_And_List_Highscore(int *Action, boolean *Cek_Sound);
+void Controller_Skor(int *Action, boolean *Cek_Sound);
+void Write_Score(int Level);
 void Show_Score();
 void Sort_Score();
 

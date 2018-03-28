@@ -3,428 +3,457 @@
 
 	//Variabel Global
 
-	puzzle puzz_final[5][5];							//Puzzle Goal
-	puzzle puzz_rand[5][5];								//Puzzle Yang Dimainkan
-	image img[5*5];										//Tempat Menyimpan Potongan Gambar
-	image thumbnail;									//Tempat Menyimpan Thumbnail Goal
-	unsigned long size;									//Menampung Ukuran Alokasi Memory untuk Gambar
-	times game_times;									//Waktu saat permainan berlangsung
-	button up,down,left,right,sound,Exit,reset,solve;	//Button
-	int x_puzz,y_puzz;
-	Pengguna player,temp;
+	Puzzle Puzz_Final[5][5];							//Puzzle Goal
+	Puzzle Puzz_Rand[5][5];								//Puzzle Yang Dimainkan
+	Image Img[5*5];										//Tempat Menyimpan Potongan Gambar
+	Image Thumbnail;									//Tempat Menyimpan Thumbnail Goal
+	unsigned long Size;									//Menampung Ukuran Alokasi Memory untuk Gambar
+	Times Game_Times;									//Waktu saat permainan berlangsung
+	Button Up,Down,Left,Right,Sound,Exit,Reset,Solve;	//Button
+	int X_Puzz,Y_Puzz;
+	Pengguna Player,Temp_Pengguna;
 	
 //Inisialisasi Puzzle Yang akan dimainkan dan Goalnya
-void InitPuzz(int puzzle_size){
+void Init_Puzz(int Puzzle_Size){
 	
 	//Variable Lokal
-	int i,j,k=0;
+	int I,J,K=0;
 	
 	//Inisialisasi Semua Elemen Array 0, Untuk Menghindari Random Value
-	for(i=0;i<5;i++){
-		for(j=0;j<5;j++) puzz_final[i][j] = puzz_rand[i][j] = 0;
+	for(I=0;I<5;I++){
+		for(J=0;J<5;J++) Puzz_Final[I][J] = Puzz_Rand[I][J] = 0;
 	}
 	
 	//Inisialisasi Elemen Array Increment Sesuai Ukuran Puzzle Size (3*3 4*4 5*5)
-	for(i=0;i<puzzle_size;i++){
-		for(j=0;j<puzzle_size;j++) puzz_final[i][j] = puzz_rand[i][j] = k+=1;
+	for(I=0;I<Puzzle_Size;I++){
+		for(J=0;J<Puzzle_Size;J++) Puzz_Final[I][J] = Puzz_Rand[I][J] = K+=1;
 	}
 }
 
 //Save Potongan Gambar Kedalam Memory Berbentuk Array
-void SaveImgMemory(const char* filename, const char* thumbs,int grid_size,int puzzle_size){
+void Save_Img_Memory(const char* Filename, const char* Thumbs,int Grid_Size,int Puzzle_Size){
 	
 	//Variable Lokal
-	int i,j,k;
+	int I,J,K;
 	
 	//Alokasi Memory Untuk Penampung Gambar
-	readimagefile(filename,0,0,450,450);
-	size=imagesize(0,0,450/puzzle_size,450/puzzle_size);
-	for(i=0;i<(25);i++){
-		img[i]=malloc(size);
+	readimagefile(Filename,0,0,450,450);
+	Size=imagesize(0,0,450/Puzzle_Size,450/Puzzle_Size);
+	for(I=0;I<(25);I++){
+		Img[I]=malloc(Size);
 	}
 	
 	//Potong Gambar simpan Ke Array
-	k=0;
-	for(i=0;i<puzzle_size;i++){
-		for(j=0;j<puzzle_size;j++){
-			if (k==(puzzle_size*puzzle_size-1)) getimage(650,450,650+grid_size,450+grid_size,img[k]);
-			else getimage(j*grid_size,i*grid_size,(j*grid_size)+grid_size,(i*grid_size)+grid_size,img[k]);
-			k+=1;
+	K=0;
+	for(I=0;I<Puzzle_Size;I++){
+		for(J=0;J<Puzzle_Size;J++){
+			if (K==(Puzzle_Size*Puzzle_Size-1)) getimage(650,450,650+Grid_Size,450+Grid_Size,Img[K]);
+			else getimage(J*Grid_Size,I*Grid_Size,(J*Grid_Size)+Grid_Size,(I*Grid_Size)+Grid_Size,Img[K]);
+			K+=1;
 		}
 	}
-	
     //Simpan Gambar Thumbnail
     clearviewport();
-	readimagefile(thumbs,0,0,100,100);
-    size=imagesize(0,0,100,100);
-    thumbnail=malloc(size);
-    getimage(0,0,100,100,thumbnail);
+	readimagefile(Thumbs,0,0,100,100);
+    Size=imagesize(0,0,100,100);
+    Thumbnail=malloc(Size);
+    getimage(0,0,100,100,Thumbnail);
 	clearviewport();
+	Draw_Puzz(150,3);
 }
 
 //Border Putih Untuk Area Kotak Kotak Puzzle
-void BorderPuzz(int grid_size, int puzzle_size){
+void Border_Puzz(int Grid_Size, int Puzzle_Size){
 	
 	//Variable Lokal
-	int i,j;
+	int I,J;
 	
 	//Generate Rectangle dengan border putih
-	for(i=0;i<puzzle_size;i++){
-		for(j=0;j<puzzle_size;j++){
-			rectangle(75+(i*grid_size),75+(j*grid_size),75+(i*grid_size)+grid_size,75+(j*grid_size)+grid_size);
+	for(I=0;I<Puzzle_Size;I++){
+		for(J=0;J<Puzzle_Size;J++){
+			rectangle(75+(I*Grid_Size),75+(J*Grid_Size),75+(I*Grid_Size)+Grid_Size,75+(J*Grid_Size)+Grid_Size);
 		}
 	}
 }
 
 //Draw Puzzle Berbentuk Gambar
-void DrawPuzz(int grid_size, int puzzle_size){
+void Draw_Puzz(int Grid_Size, int Puzzle_Size){
 	
 	//Variable Lokal
-	boolean found;
-	int i,j,k;
+	boolean Found;
+	int I,J,K;
 	
 	//penempatan thumbnail image
-	putimage(625,200,thumbnail,COPY_PUT);
+	putimage(625,200,Thumbnail,COPY_PUT);
 	
 	//mencocokan value array dengan indeks array gambar
-	for(i=0;i<puzzle_size;i++){
-		for(j=0;j<puzzle_size;j++){
-			found=false;
-			for(k=1;k<=(puzzle_size*puzzle_size);k++){
-				if(puzz_rand[i][j]==k && not found){
-					putimage(j*grid_size+75,i*grid_size+75,img[k-1],COPY_PUT);
-					found=true;
+	for(I=0;I<Puzzle_Size;I++){
+		for(J=0;J<Puzzle_Size;J++){
+			Found=false;
+			for(K=1;K<=(Puzzle_Size*Puzzle_Size);K++){
+				if(Puzz_Rand[I][J]==K && not Found){
+					putimage(J*Grid_Size+75,I*Grid_Size+75,Img[K-1],COPY_PUT);
+					Found=true;
 				}
 			}
 		}
 	}
 	
 	//Menampilkan Garis Putih Kotak Kotak Puzzle
-	BorderPuzz(grid_size,puzzle_size);
+	Border_Puzz(Grid_Size,Puzzle_Size);
 }
 
 //Membuat Tampilan Button Berbentuk Gambar (Ketika Press / Tidak)
-void make_button_img(struct button Button,int style){
+void Make_Button_Img(struct Button Button,int Style){
 	
-	if(Button.image != NULL && Button.hover_image != NULL){
-		if(style==NOT_HOVER) readimagefile( Button.image, Button.x,Button.y, Button.x+Button.width, Button.y+Button.height);
-		else readimagefile( Button.hover_image, Button.x,Button.y, Button.x+Button.width, Button.y+Button.height);
+	if(Button.Image != NULL && Button.Hover_Image != NULL){
+		if(Style==NOT_HOVER) readimagefile( Button.Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
+		else readimagefile( Button.Hover_Image, Button.X,Button.Y, Button.X+Button.Width, Button.Y+Button.Height);
 	}
 }
 
 //Membuat Tampilan Button Untuk Halaman Game
-void DrawButtonGame(){
-	make_button_img(up,NOT_HOVER);
-	make_button_img(down,NOT_HOVER);
-	make_button_img(left,NOT_HOVER);
-	make_button_img(right,NOT_HOVER);
-	make_button_img(reset,NOT_HOVER);
-	make_button_img(solve,NOT_HOVER);
-	make_button_img(Exit,NOT_HOVER);	
+void Draw_Button_Game(){
+	Make_Button_Img(Up,NOT_HOVER);
+	Make_Button_Img(Down,NOT_HOVER);
+	Make_Button_Img(Left,NOT_HOVER);
+	Make_Button_Img(Right,NOT_HOVER);
+	Make_Button_Img(Reset,NOT_HOVER);
+	Make_Button_Img(Solve,NOT_HOVER);
+	Make_Button_Img(Exit,NOT_HOVER);	
 }
 
-void controller_game(int *action, boolean *ceksound,int puzzle_size){
+void Controller_Game(int *Action, boolean *Cek_Sound,int Puzzle_Size){
 	
 	//variable lokal
-	int valid=0, win=0;		//untuk mengatur looping controller (valid untuk looping jika x,y mouse valid di button) dan win untuk game selesai		
-	int psound=0;			//untuk mengatur gambar button sound mute atau tidak
-	int x=-1,y=-1;			//koordinat mouse
-	int movement=0;			//untuk jumlah movement puzzle
-	char move[128]; 		//text movement
-	int temp_action = *action;
-	char string_score[30];
+	int Valid=0, Win=0;		//untuk mengatur looping controller (valid untuk looping Jika x,y mouse valid di button) dan win untuk game selesai		
+	int X=-1,Y=-1;			//koordinat mouse
+	int Movement=0;			//untuk Jumlah movement puzzle
+	char Move[128]; 		//text movement
+	int Temp_Action = *Action;
+	char String_Score[30];
 	
 	//Inisialisasi waktu 0:0:0:0
-	game_times.msec = game_times.sec = game_times.min = game_times.hour = 0;
+	Game_Times.Msec = Game_Times.Sec = Game_Times.Min = Game_Times.Hour = 0;
 	
 	//Looping Controller mouse
-	while(win==0){
-		while(valid==0){
+	while(Win==0){
+		while(Valid==0){
 			
 			//Tampilkan Movement text
-			sprintf(move,"Movement : %d",movement);
-			outtextxy(590,95,move);
+			sprintf(Move,"Movement : %d",Movement);
+			outtextxy(590,95,Move);
 			
 			//mendapatkan koordinat x,y ketika klik
-			getmouseclick(WM_LBUTTONDOWN,x,y);
+			getmouseclick(WM_LBUTTONDOWN,X,Y);
 			
 			delay(200);
-			waktu(200);
+			Waktu(200);
+			
+			//Pengecekan Jika Keyboard UP DOWN LEFT RIGHT Tertekan
+			if(kbhit()){
+				char key;
+				key = getch();
+				switch(key){
+					case KeyUp :
+						Make_Button_Img(Up,HOVER);
+						Movement_Array(KeyUp,Puzzle_Size,&Movement);
+						Valid = 1;
+						*Action = NO_ACT;
+						break;
+					case KeyDown :
+						Make_Button_Img(Down,HOVER);
+						Movement_Array(KeyDown,Puzzle_Size,&Movement);
+						Valid = 1;
+						*Action = NO_ACT;
+						break;
+					case KeyLeft :
+						Make_Button_Img(Left,HOVER);
+						Movement_Array(KeyLeft,Puzzle_Size,&Movement);
+						Valid = 1;
+						*Action = NO_ACT;
+						break;
+					case KeyRight :
+						Make_Button_Img(Right,HOVER);
+						Movement_Array(KeyRight,Puzzle_Size,&Movement);
+						Valid = 1;
+						*Action = NO_ACT;
+						break;
+					default:break;
+				}
+			}
 			
 			//Button Up
-			if(x>=up.x && x<=up.x+up.width && y>=up.y && y<=up.y+up.height){
-				make_button_img(up,HOVER);
-				Movement(KeyUp,puzzle_size,&movement);
-				valid = 1;
-				*action = NO_ACT;
+			if(X>=Up.X && X<=Up.X+Up.Width && Y>=Up.Y && Y<=Up.Y+Up.Height){
+				Make_Button_Img(Up,HOVER);
+				Movement_Array(KeyUp,Puzzle_Size,&Movement);
+				Valid = 1;
+				*Action = NO_ACT;
 			}
 			
 			//Button Down
-			else if(x>=down.x && x<=down.x+down.width && y>=down.y && y<=down.y+down.height){
-				make_button_img(down,HOVER);
-				Movement(KeyDown,puzzle_size,&movement);
-				valid = 1;
-				*action = NO_ACT;
+			else if(X>=Down.X && X<=Down.X+Down.Width && Y>=Down.Y && Y<=Down.Y+Down.Height){
+				Make_Button_Img(Down,HOVER);
+				Movement_Array(KeyDown,Puzzle_Size,&Movement);
+				Valid = 1;
+				*Action = NO_ACT;
 			}
 			
 			//Button Left
-			else if(x>=left.x && x<=left.x+left.width && y>=left.y && y<=left.y+left.height){
-				make_button_img(left,HOVER);
-				Movement(KeyLeft,puzzle_size,&movement);
-				valid = 1;
-				*action = NO_ACT;
+			else if(X>=Left.X && X<=Left.X+Left.Width && Y>=Left.Y && Y<=Left.Y+Left.Height){
+				Make_Button_Img(Left,HOVER);
+				Movement_Array(KeyLeft,Puzzle_Size,&Movement);
+				Valid = 1;
+				*Action = NO_ACT;
 			}
 			
 			//Button Right
-			else if(x>=right.x && x<=right.x+right.width && y>=right.y && y<=right.y+right.height){
-				make_button_img(right,HOVER);
-				Movement(KeyRight,puzzle_size,&movement);
-				valid = 1;
-				*action = NO_ACT;
+			else if(X>=Right.X && X<=Right.X+Right.Width && Y>=Right.Y && Y<=Right.Y+Right.Height){
+				Make_Button_Img(Right,HOVER);
+				Movement_Array(KeyRight,Puzzle_Size,&Movement);
+				Valid = 1;
+				*Action = NO_ACT;
 			}
 			
 			//Button Reset
-			else if(x>=reset.x && x<=reset.x+reset.width && y>=reset.y && y<=reset.y+reset.height){
-				make_button_img(reset,HOVER);
-				valid = 1;
-				win = -1;
-				*action = temp_action;
+			else if(X>=Reset.X && X<=Reset.X+Reset.Width && Y>=Reset.Y && Y<=Reset.Y+Reset.Height){
+				Make_Button_Img(Reset,HOVER);
+				Valid = 1;
+				Win = -1;
+				*Action = Temp_Action;
 			}
 			
 			//Button Solve
-			else if(x>=solve.x && x<=solve.x+solve.width && y>=solve.y && y<=solve.y+solve.height){
-				make_button_img(solve,HOVER);
-				valid = 1;
+			else if(X>=Solve.X && X<=Solve.X+Solve.Width && Y>=Solve.Y && Y<=Solve.Y+Solve.Height){
+				Make_Button_Img(Solve,HOVER);
+				Valid = 1;
 			}
 			
-			//Button Exit
-			else if(x>=Exit.x && x<=Exit.x+Exit.width && y>=Exit.y && y<=Exit.y+Exit.height){
-				make_button_img(Exit,HOVER);
-				*action=0;
-				valid = 1;
-				win = -1;
+			//Button EXit
+			else if(X>=Exit.X && X<=Exit.X+Exit.Width && Y>=Exit.Y && Y<=Exit.Y+Exit.Height){
+				Make_Button_Img(Exit,HOVER);
+				*Action=0;
+				Valid = 1;
+				Win = -1;
 			}
 			
 			//Cheats ( For Testing )
-			else if(x>=0 && x<= (0+25) && y>=0 && y<=(0+25))  cheats (puzzle_size);
+			else if(X>=0 && X<= (0+25) && Y>=0 && Y<=(0+25))  Cheats(Puzzle_Size);
 			
 			//Button Sound
-			else if(x>=sound.x && x<=sound.x+sound.width && y>=sound.y && y<=sound.y+sound.height){
-				psound=psound+1;
-				if((psound%2==1) && (*ceksound == true)){
-					mciSendString("pause myMidi",0,0,0);
-					make_button_img(sound,HOVER);
-					*ceksound = false;
+			else if(X>=Sound.X && X<=Sound.X+Sound.Width && Y>=Sound.Y && Y<=Sound.Y+Sound.Height){
+				if(*Cek_Sound){
+					PlaySound(TEXT(" "), NULL,SND_ASYNC);
+					*Cek_Sound = false;
 				}
 				else {
-					mciSendString("resume myMidi",0,0,0);
-					make_button_img(sound,NOT_HOVER);
-					*ceksound = true;	
+					PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
+					*Cek_Sound = true;	
 				}
-				valid = 1;
+				Valid = 1;
+				Sound_Cek(Cek_Sound);
 			}
 		}
 		
 		//Jika tidak klik tombol exit Dan Reset 
-		if(*action == NO_ACT || *action != B_EASY != B_MEDIUM != B_HARD ){ 
-			valid=0;
+		if(*Action == NO_ACT || *Action != B_EASY != B_MEDIUM != B_HARD ){ 
+			Valid=0;
 			delay(200);
-			waktu(200);
-			DrawPuzz(450/puzzle_size,puzzle_size);
-			DrawButtonGame();
+			Waktu(200);
+			Draw_Puzz(450/Puzzle_Size,Puzzle_Size);
+			Draw_Button_Game();
 			clearmouseclick(WM_LBUTTONDOWN);	
 		}
 		
 		//Cek Kemenangan
-		victory(&valid, &win,puzzle_size);
+		Victory(&Valid, &Win,Puzzle_Size);
 	}
 	
-	if ((valid == 1) && win == 1){
-		*action = ACT_END;
+	if ((Valid == 1) && Win == 1){
+		*Action = ACT_END;
 		
-		if (temp_action == B_EASY) {
+		if (Temp_Action == B_EASY) {
 			printf("Easy");
-			player.skor = ((1800/((game_times.hour*3600)+(game_times.min*60)+(game_times.sec)))*100); 	
+			Player.Skor = ((1800/((Game_Times.Hour*3600)+(Game_Times.Min*60)+(Game_Times.Sec)))*100); 	
 		}
-		else if (temp_action == B_MEDIUM) {
+		else if (Temp_Action == B_MEDIUM) {
 			printf("Medium");
-			player.skor = ((2700/((game_times.hour*3600)+(game_times.min*60)+(game_times.sec)))*100); 
+			Player.Skor = ((2700/((Game_Times.Hour*3600)+(Game_Times.Min*60)+(Game_Times.Sec)))*100); 
 		}
-		else if (temp_action == B_MEDIUM) {
+		else if (Temp_Action == B_HARD) {
 			printf("Hard");
-			player.skor = ((3600/((game_times.hour*3600)+(game_times.min*60)+(game_times.sec)))*100); 
+			Player.Skor = ((3600/((Game_Times.Hour*3600)+(Game_Times.Min*60)+(Game_Times.Sec)))*100); 
 		}
 		
 		//Ganti Tampilan Ke Win
 		cleardevice();
 		readimagefile("Assets/bg_utama_score.bmp", 0, 0, 800, 600);
-		Write_Score(temp_action);
-		sprintf(string_score,"Name : %s",player.nama);
-		outtextxy (281,283, string_score);
-		sprintf(string_score,"Score : %d",player.skor);
-		outtextxy (281,303, string_score);
+		Write_Score(Temp_Action);
+		sprintf(String_Score,"Name : %s",Player.Nama);
+		outtextxy (281,283, String_Score);
+		sprintf(String_Score,"Score : %d",Player.Skor);
+		outtextxy (281,303, String_Score);
 		getch();
 	}
 	
 }
 
 //Menghitung Waktu
-void waktu(int Delay){
+void Waktu(int Delay){
 	
 	//var lokal
-	char time[128];
+	char Time[128];
 	
 	//kalkulasi
-	game_times.msec = game_times.msec + Delay;
-	if (game_times.msec>=1000) {
-		game_times.sec=game_times.sec + 1;
-		game_times.msec=0;	
+	Game_Times.Msec = Game_Times.Msec + Delay;
+	if (Game_Times.Msec>=1000) {
+		Game_Times.Sec=Game_Times.Sec + 1;
+		Game_Times.Msec=0;	
 	}
-	if (game_times.sec>=60) {
-		game_times.min = game_times.min + 1;
-		game_times.sec = 0;	
+	if (Game_Times.Sec>=60) {
+		Game_Times.Min = Game_Times.Min + 1;
+		Game_Times.Sec = 0;	
 	}
-	if (game_times.min>=60) {
-		game_times.hour = game_times.hour + 1;
-		game_times.min = 0;
+	if (Game_Times.Min>=60) {
+		Game_Times.Hour = Game_Times.Hour + 1;
+		Game_Times.Min = 0;
 	}
 	
-	//tampilkan waktu pengerjaan
-	sprintf(time,"Waktu : %d:%d:%d:%d",game_times.hour,game_times.min,game_times.sec,game_times.msec);
-	outtextxy(590,115,time); 
+	//tampilkan waktu pengerJaan
+	sprintf(Time,"Waktu : %d:%d:%d:%d",Game_Times.Hour,Game_Times.Min,Game_Times.Sec,Game_Times.Msec);
+	outtextxy(590,115,Time); 
 }
 
-void game_menu(int *action, boolean *ceksound, char *nama, int puzzle_size){
+void Game_Menu(int *Action, boolean *Cek_Sound, char *Nama, int Puzzle_Size){
 	
 	//var lokal
-	int temp_action = *action;
-	strcpy(player.nama, nama);
+	int Temp_Action = *Action;
+	strcpy(Player.Nama, Nama);
 	
 	/* Inisialisasi Button */
 	//Up
-	up.x=650;		up.y=350;
-	up.width=50;	up.height=50;
-	up.image="Assets/up.bmp";
-	up.hover_image="Assets/h_up.bmp";
+	Up.X=650;		Up.Y=350;
+	Up.Width=50;	Up.Height=50;
+	Up.Image="Assets/Up.bmp";
+	Up.Hover_Image="Assets/h_Up.bmp";
 	
 	//Down
-	down.x=650;		down.y=450;
-	down.width=50;	down.height=50;
-	down.image="Assets/down.bmp";
-	down.hover_image="Assets/h_down.bmp";
+	Down.X=650;		Down.Y=450;
+	Down.Width=50;	Down.Height=50;
+	Down.Image="Assets/Down.bmp";
+	Down.Hover_Image="Assets/h_Down.bmp";
 	
 	//Left 
-	left.x=600;		left.y=400;
-	left.width=50;	left.height=50;
-	left.image="Assets/left.bmp";
-	left.hover_image="Assets/h_left.bmp";
+	Left.X=600;		Left.Y=400;
+	Left.Width=50;	Left.Height=50;
+	Left.Image="Assets/Left.bmp";
+	Left.Hover_Image="Assets/h_Left.bmp";
 	
 	//Right
-	right.x=700;		right.y=400;
-	right.width=50;		right.height=50;
-	right.image="Assets/right.bmp";
-	right.hover_image="Assets/h_right.bmp";
+	Right.X=700;		Right.Y=400;
+	Right.Width=50;		Right.Height=50;
+	Right.Image="Assets/Right.bmp";
+	Right.Hover_Image="Assets/h_Right.bmp";
 	
 	//Sound
-	sound.x=740;		sound.y=540;
-	sound.width=50;		sound.height=50;
-	sound.image="Assets/sound.bmp";
-	sound.hover_image="Assets/h_sound.bmp";
+	Sound.X=740;		Sound.Y=540;
+	Sound.Width=50;		Sound.Height=50;
+	Sound.Image="Assets/Sound.bmp";
+	Sound.Hover_Image="Assets/h_Sound.bmp";
 	
 	//Reset
-	reset.x=250;		reset.y=550;
-	reset.width=75;		reset.height=35;
-	reset.image="Assets/reset.bmp";
-	reset.hover_image="Assets/h_reset.bmp";
+	Reset.X=250;		Reset.Y=550;
+	Reset.Width=75;		Reset.Height=35;
+	Reset.Image="Assets/reset.bmp";
+	Reset.Hover_Image="Assets/h_reset.bmp";
 	
 	//Solve
-	solve.x=375;		solve.y=550;
-	solve.width=75;		solve.height=35;
-	solve.image="Assets/solve.bmp";
-	solve.hover_image="Assets/h_solve.bmp";
+	Solve.X=375;		Solve.Y=550;
+	Solve.Width=75;		Solve.Height=35;
+	Solve.Image="Assets/solve.bmp";
+	Solve.Hover_Image="Assets/h_solve.bmp";
 	
 	//Exit
-	Exit.x=125;		Exit.y=550;
-	Exit.width=75;		Exit.height=35;
-	Exit.image="Assets/g_exit.bmp";
-	Exit.hover_image="Assets/h_g_exit.bmp";	
+	Exit.X=125;			Exit.Y=550;
+	Exit.Width=75;		Exit.Height=35;
+	Exit.Image="Assets/g_exit.bmp";
+	Exit.Hover_Image="Assets/h_g_exit.bmp";	
 	
 	//Inisialisasi Puzzle
-	InitPuzz ( puzzle_size );
+	Init_Puzz (Puzzle_Size);
 	
 	//Inisialisasi Gambar Puzzle
-	SaveImgMemory ( "Assets\\Puzzle.bmp", "Assets\\Thumbs.bmp", 450/puzzle_size, puzzle_size); 
+	Save_Img_Memory ( "Assets\\Puzzle.bmp", "Assets\\Thumbs.bmp", 450/Puzzle_Size, Puzzle_Size); 
 	
 	//Random Puzzle
-	random (puzzle_size);
+	Random (Puzzle_Size);
 	
 	//Draw Interface Game
 	readimagefile ( "Assets\\bg_game.bmp", 0, 0, 800, 600);	
-	DrawPuzz ( 450/puzzle_size, puzzle_size);	
-	DrawButtonGame ();
-	soundcek ( ceksound );
+	Draw_Puzz ( 450/Puzzle_Size, Puzzle_Size);	
+	Draw_Button_Game ();
+	Sound_Cek ( Cek_Sound );
 	settextstyle(3, HORIZ_DIR, 1);
-	outtextxy(590,75,nama);
-	controller_game ( action, ceksound, puzzle_size);
+	outtextxy(590,75,Nama);
+	Controller_Game ( Action, Cek_Sound, Puzzle_Size);
 	
 	//Dealoc Pointer Image
-	DeAlocGambar();
+	De_Aloc_Img();
 	
 }
 
 //Clear Memory untuk Gambar
-void DeAlocGambar(){
-	int i;
-	for(i=0;i<25;i++) free(img[i]);
-	free(thumbnail);
+void De_Aloc_Img(){
+	int I;
+	for(I=0;I<25;I++) free(Img[I]);
+	free(Thumbnail);
 }
 
 //Untuk Mengatur Movement puzzle
-void Movement(int Control,int puzzle_size, int *movement){
-	int temp_puzz;
+void Movement_Array(int Control,int Puzzle_Size, int *Movement){
+	int Temp_Puzz;
 	switch(Control){
-		
 		//KeyUp
 		case KeyUp:{
-			if((x_puzz-1)>=0){
-				temp_puzz = puzz_rand[x_puzz-1][y_puzz];
-				puzz_rand[x_puzz-1][y_puzz] = puzz_rand[x_puzz][y_puzz];
-				puzz_rand[x_puzz][y_puzz] = temp_puzz;
-				x_puzz-=1;
-				*movement=*movement+1;
+			if((X_Puzz-1)>=0){
+				Temp_Puzz = Puzz_Rand[X_Puzz-1][Y_Puzz];
+				Puzz_Rand[X_Puzz-1][Y_Puzz] = Puzz_Rand[X_Puzz][Y_Puzz];
+				Puzz_Rand[X_Puzz][Y_Puzz] = Temp_Puzz;
+				X_Puzz-=1;
+				*Movement=*Movement+1;
 			}break;
 		}
 		
 		//KeyDown
 		case KeyDown:{
-			if((x_puzz+1)<puzzle_size){
-				temp_puzz = puzz_rand[x_puzz+1][y_puzz];
-				puzz_rand[x_puzz+1][y_puzz] = puzz_rand[x_puzz][y_puzz];
-				puzz_rand[x_puzz][y_puzz] = temp_puzz;
-				x_puzz+=1;
-				*movement=*movement+1;
+			if((X_Puzz+1)<Puzzle_Size){
+				Temp_Puzz = Puzz_Rand[X_Puzz+1][Y_Puzz];
+				Puzz_Rand[X_Puzz+1][Y_Puzz] = Puzz_Rand[X_Puzz][Y_Puzz];
+				Puzz_Rand[X_Puzz][Y_Puzz] = Temp_Puzz;
+				X_Puzz+=1;
+				*Movement=*Movement+1;
 			}break;
 		}
 		
 		//KeyLeft
 		case KeyLeft:{
-			if((y_puzz-1)>=0){
-				temp_puzz = puzz_rand[x_puzz][y_puzz-1];
-				puzz_rand[x_puzz][y_puzz-1] = puzz_rand[x_puzz][y_puzz];
-				puzz_rand[x_puzz][y_puzz] = temp_puzz;
-				y_puzz-=1;
-				*movement=*movement+1;
+			if((Y_Puzz-1)>=0){
+				Temp_Puzz = Puzz_Rand[X_Puzz][Y_Puzz-1];
+				Puzz_Rand[X_Puzz][Y_Puzz-1] = Puzz_Rand[X_Puzz][Y_Puzz];
+				Puzz_Rand[X_Puzz][Y_Puzz] = Temp_Puzz;
+				Y_Puzz-=1;
+				*Movement=*Movement+1;
 			}break;
 		}
 		
 		//KeyRight
 		case KeyRight:{
-			if((y_puzz+1)<puzzle_size){
-				temp_puzz = puzz_rand[x_puzz][y_puzz+1];
-				puzz_rand[x_puzz][y_puzz+1] = puzz_rand[x_puzz][y_puzz];
-				puzz_rand[x_puzz][y_puzz] = temp_puzz;
-				y_puzz+=1;
-				*movement=*movement+1;
+			if((Y_Puzz+1)<Puzzle_Size){
+				Temp_Puzz = Puzz_Rand[X_Puzz][Y_Puzz+1];
+				Puzz_Rand[X_Puzz][Y_Puzz+1] = Puzz_Rand[X_Puzz][Y_Puzz];
+				Puzz_Rand[X_Puzz][Y_Puzz] = Temp_Puzz;
+				Y_Puzz+=1;
+				*Movement=*Movement+1;
 			}
 		}
 	}

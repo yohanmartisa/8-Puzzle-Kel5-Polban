@@ -8,10 +8,10 @@
 #include "Ali_171511035.h"
 #include "Firna_171511040.h"
 
-void About_Menu(int *action, boolean *ceksound);
+void About_Menu(int *Action, boolean *Cek_Sound);
 //Menampilkan Menu About
 
-void controller_about(int *action, boolean *ceksound);
+void Controller_About(int *Action, boolean *Cek_Sound);
 //Kontroller mouse untuk Menu About
 
 #endif

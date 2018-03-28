@@ -8,59 +8,57 @@
 #include "Include\\Ilham_171511042.h"
 #include "Include\\RaeyFaldo_171511058.h"
 #include "Include\\Yohan_171511033.h"
-#include "Include\\config.h"
 
 
 int main(){
-	int action=NO_ACT;
-	char nama[11];
-	boolean ceksound = true;
+	int Action=NO_ACT;
+	char Nama[11];
+	boolean Cek_Sound = true;
 	
 	initwindow(800,600,"Game");
-	awal();
+	Awal();
 	
-	mciSendString("open Assets\\intro.wav type waveaudio alias myMidi",NULL,0,NULL);
-	mciSendString("play myMidi notify",NULL,0,NULL);
+	PlaySound(TEXT("Assets\\intro.wav"), NULL, SND_LOOP | SND_ASYNC);
 			
-	while(action != B_EXIT){
-		Main_Menu(&action, &ceksound);
-		switch(action){
+	while(Action != B_EXIT){
+		Main_Menu(&Action, &Cek_Sound);
+		switch(Action){
 			case B_LEVEL : {
 				cleardevice();
-				Menu_Difficult(&action, &ceksound, nama);
+				Menu_Difficult(&Action, &Cek_Sound, Nama);
 				break;
 			}
 			case B_SCORE:{
 				cleardevice();
-				HighScore_Menu(&action, &ceksound);
+				Highscore_Menu(&Action, &Cek_Sound);
 				break;
 			}
 			case B_ABOUT:{
 				cleardevice();
-				About_Menu(&action, &ceksound);
+				About_Menu(&Action, &Cek_Sound);
 				break;
 			}
 			default : break;
 		}
 		
 		//Game Menu
-		while (action == B_EASY || action == B_MEDIUM || action == B_HARD || action == 21){
-			switch(action){
+		while (Action == B_EASY || Action == B_MEDIUM || Action == B_HARD || Action == 21){
+			switch(Action){
 				case B_EASY :{
 					cleardevice();
-					game_menu(&action, &ceksound, nama,3);
+					Game_Menu(&Action, &Cek_Sound, Nama,3);
 					break;}
 				case B_MEDIUM:{
 					cleardevice();
-					game_menu(&action, &ceksound, nama,4);
+					Game_Menu(&Action, &Cek_Sound, Nama,4);
 					break;}
 				case B_HARD:{
 					cleardevice();
-					game_menu(&action, &ceksound, nama,5);
+					Game_Menu(&Action, &Cek_Sound, Nama,5);
 					break;}
 				case ACT_END :{
 					cleardevice();
-					HighScore_Menu(&action, &ceksound);
+					Highscore_Menu(&Action, &Cek_Sound);
 					break;
 				}
 				default : break;
@@ -68,5 +66,4 @@ int main(){
 		}
 				
 	}
-	//mciSendString("play ""Assets\\intro.wav""",NULL,0,NULL);
 }
